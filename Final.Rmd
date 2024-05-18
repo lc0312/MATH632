@@ -1,0 +1,336 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+Final
+Q1
+```{r}
+### a)
+
+cat (' Mantel-Haenszel test can be used')
+
+```
+
+
+```{r}
+### b)
+
+table <- array(c(4, 16, 455-4, 410-16, 6, 1, 663-6, 192-1), 
+               dim = c(2,2,2),
+               dimnames = list(blood_lead = c("<=11", ">=12"),
+                               SBP = c("yes", "no"),
+                               sex = c("man", "women")))
+
+table
+
+mantelhaen.test(table)
+
+```
+
+```{r}
+### c)
+
+OR <- ((4*394/865)+(6*191/855))/((16*451/865)+(1*657/855))
+OR
+cat ('this is already shown previously, similar, CI is from 0.1468226 to 0.8205821')
+
+```
+
+Q2
+```{r}
+### a)
+
+Odds_ratio <- exp(0.328)/exp(0.049)
+cat ('Odds ratio is:', Odds_ratio, '\n')
+
+SE <- (0.041^2+0.059^2)^2
+
+CI_up <- exp(Odds_ratio+1.96*SE)
+CI_low <- exp(Odds_ratio-1.96*SE)
+
+cat ('upper 95% CI:', CI_up, '\n')
+
+cat ('lower 95% CI:', CI_low, '\n') 
+
+```
+
+```{r}
+### b)
+
+Odds_ratio <- exp(0.186)/exp(0.009)
+cat ('Odds ratio is:', Odds_ratio, '\n')
+
+SE <- (0.042^2+0.060^2)^2
+
+CI_up <- exp(Odds_ratio+1.96*SE)
+CI_low <- exp(Odds_ratio-1.96*SE)
+
+cat ('upper 95% CI:', CI_up, '\n')
+
+cat ('lower 95% CI:', CI_low, '\n') 
+
+cat ('based on odds ratio result, the racial differences is reduced, I think is because we consider BMI as a factor')
+
+```
+```{r}
+### c)
+
+cat ('yes, is should be considered as confounder since its related with ethnic and hypertension. Its a confounder')
+
+```
+
+```{r}
+### d)
+
+cat ('yes, is should be considered as  an effect modifier since its changing the result of Ethnic groups')
+
+Odds_ratio <- exp(0.186)/exp(0.009)
+
+```
+
+
+```{r}
+### d)
+
+Odds_ratio <- exp(0.231-0.024*25)/exp(0.063-0.035*25)
+cat ('Odds ratio is:', Odds_ratio, '\n')
+
+```
+
+Q3
+```{r}
+### a)
+
+ages <- c("35-39", "40-44", "45-49", "50-54", "55-59")
+Premenopausal_cases <- c(124,264,304,159,25)
+Premenopausal_person_years <- c(131704,179132,151548,61215,6133)
+
+Postmenopausal_cases <- c(15,47,163,401,490)
+Postmenopausal_person_years <- c(14795,43583,90965,184597,180458)
+
+
+data_fm <- do.call(rbind, Map(data.frame, ages=ages, Premenopausal_cases=Premenopausal_cases, Premenopausal_person_years=Premenopausal_person_years,Postmenopausal_cases=Postmenopausal_cases,Postmenopausal_person_years=Postmenopausal_person_years))
+
+data_fm$pre_age_adjust <- (data_fm$Premenopausal_cases/data_fm$Premenopausal_person_years)*(data_fm$Premenopausal_person_years+data_fm$Postmenopausal_person_years)
+
+data_fm$pos_age_adjust <- (data_fm$Postmenopausal_cases/data_fm$Postmenopausal_person_years)*(data_fm$Premenopausal_person_years+data_fm$Postmenopausal_person_years)
+
+cat ('not we normalize the age affect, and we can do a chisquare test for p-value', '\n')
+
+chisq.test(data_fm$pos_age_adjust,data_fm$pre_age_adjust)
+
+```
+
+
+
+```{r}
+### b)
+
+p_pre <- ((Premenopausal_person_years+Postmenopausal_person_years)*(Premenopausal_cases/Premenopausal_person_years))/sum(Premenopausal_person_years+Postmenopausal_person_years)
+
+p_pps <- ((Premenopausal_person_years+Postmenopausal_person_years)*(Postmenopausal_cases/Postmenopausal_person_years))/sum(Premenopausal_person_years+Postmenopausal_person_years)
+
+cat (' rate ratio is ')
+rr <- sum(p_pre)/sum (p_pos)
+rr
+
+SE_pre <-  sd(p_pre)/sqrt(length((p_pre)))
+SE_pos <-  sd(p_pos)/sqrt(length((p_pos)))
+
+SE <- (SE_pre^2+SE_pos^2)^2
+
+CI_up <- exp(rr+1.96*SE)
+CI_low <- exp(rr-1.96*SE)
+
+cat ('upper 95% CI:', CI_up, '\n')
+
+cat ('lower 95% CI:', CI_low, '\n') 
+
+```
+
+Q4
+```{r}
+### a)
+
+cat ('we can use Sign test,e Wilcoxon Signed-Rank Test etc. to test  ')
+
+```
+
+```{r}
+### b)
+
+tear_df <-read.csv('D:/R632/Final/TEAR.csv')
+
+cat ('base vs immediate','\n')
+
+w_test_od<-wilcox.test ((tear_df$od6bas1+tear_df$od6bas2)/2, (tear_df$od6im1+tear_df$od6im2)/2, paired = TRUE)
+cat ('p-value for od is',w_test_od$p.value, '\n')
+
+
+w_test_os<-wilcox.test ((tear_df$os6bas1+tear_df$os6bas2)/2, (tear_df$os6im1+tear_df$os6im2)/2, paired = TRUE)
+cat ('p-value for os is',w_test_os$p.value, '\n')
+
+
+```
+
+
+```{r}
+### c)
+
+cat ('base vs 5min','\n')
+w_test<-wilcox.test ((tear_df$od6bas1+tear_df$od6bas2)/2, (tear_df$od6pst51+tear_df$od6pst52)/2, paired = TRUE)
+cat ('p-value for od is',w_test$p.value, '\n')
+
+
+w_test<-wilcox.test ((tear_df$os6bas1+tear_df$os6bas2)/2, (tear_df$os6pst51+tear_df$os6pst52)/2, paired = TRUE)
+cat ('p-value for os is',w_test$p.value, '\n')
+```
+
+```{r}
+### d)
+
+cat ('base vs 10min','\n')
+w_test<-wilcox.test ((tear_df$od6bas1+tear_df$od6bas2)/2, (tear_df$od6pt101+tear_df$od6pt102)/2, paired = TRUE)
+cat ('p-value for od is',w_test$p.value, '\n')
+
+
+w_test<-wilcox.test ((tear_df$os6bas1+tear_df$os6bas2)/2, (tear_df$os6pt101+tear_df$os6pt102)/2, paired = TRUE)
+cat ('p-value for os is',w_test$p.value, '\n')
+```
+
+```{r}
+### e)
+
+cat ('base vs 15 min:', '\n')
+
+w_test<-wilcox.test ((tear_df$od6bas1+tear_df$od6bas2)/2, (tear_df$od6pt151+tear_df$od6pt152)/2, paired = TRUE)
+cat ('p-value for od is',w_test$p.value, '\n')
+
+
+w_test<-wilcox.test ((tear_df$os6bas1+tear_df$os6bas2)/2, (tear_df$os6pt151+tear_df$os6pt152)/2, paired = TRUE)
+cat ('p-value for os is',w_test$p.value, '\n')
+```
+
+```{r}
+### f)
+
+cat ('placebo it is a short lasting, because p value is keep increasing and p>0.05 at 15 min, so it recovered (last short) ')
+```
+Q5
+```{r}
+### a)
+
+id<- seq(1, 14, 1)
+tear.df<- data.frame(id)
+
+tear.df$bas3 <- (tear_df$od3bas1+tear_df$od3bas2+tear_df$os3bas1+tear_df$os3bas2)/4
+tear.df$im3 <- (tear_df$od3im1+tear_df$od3im2+tear_df$os3im1+tear_df$os3im2)/4 - (tear.df$bas3)
+tear.df$pt3_5 <- (tear_df$od3pst51+tear_df$od3pst51+tear_df$os3pst51+tear_df$os3pst52)/4 - (tear.df$bas3)
+tear.df$pt3_10 <- (tear_df$od3pt101+tear_df$od3pt102+tear_df$os3pt101+tear_df$os3pt102)/4 - (tear.df$bas3)
+tear.df$pt3_15 <- (tear_df$od3pt151+tear_df$od3pt152+tear_df$os3pt151+tear_df$os3pt152)/4 - (tear.df$bas3)
+
+tear.df$bas6 <- (tear_df$od6bas1+tear_df$od6bas2+tear_df$os6bas1+tear_df$os6bas2)/4
+tear.df$im6 <- (tear_df$od6im1+tear_df$od6im2+tear_df$os6im1+tear_df$os6im2)/4 -(tear.df$bas6)
+tear.df$pt6_5 <- (tear_df$od6pst51+tear_df$od6pst51+tear_df$os6pst51+tear_df$os6pst52)/4 -(tear.df$bas6)
+tear.df$pt6_10 <- (tear_df$od6pt101+tear_df$od6pt102+tear_df$os6pt101+tear_df$os6pt102)/4 -(tear.df$bas6)
+tear.df$pt6_15 <- (tear_df$od6pt151+tear_df$od6pt152+tear_df$os6pt151+tear_df$os6pt152)/4 -(tear.df$bas6)
+
+tear.df$bas10 <- (tear_df$od10bas1+tear_df$od10bas2+tear_df$os10bas1+tear_df$os10bas2)/4
+tear.df$im10 <- (tear_df$od10im1+tear_df$od10om2+tear_df$os10im1+tear_df$os10im2)/4 -(tear.df$bas10)
+tear.df$pt10_5 <- (tear_df$od10ps51+tear_df$od10p102+tear_df$os10ps51+tear_df$os10ps52)/4 -(tear.df$bas10)
+tear.df$pt10_10 <- (tear_df$od10p101+tear_df$od10p102+tear_df$os10ps51+tear_df$os10ps52)/4 -(tear.df$bas10)
+tear.df$pt10_15 <- (tear_df$od10p151+tear_df$od10p152+tear_df$os10p151+tear_df$os10p152)/4 -(tear.df$bas10)
+
+
+id<- as.vector(replicate(3, 1:14))
+bas_vs_im<- data.frame(id)
+bas_vs_im$TUBT_change <- c(tear.df$im3, tear.df$im6, tear.df$im10)
+bas_vs_im$ntp <- rep(c(3,6,10), each = 14)
+
+
+bas_vs_im <- within(bas_vs_im, {
+                   id <- factor(id)
+                   ntp <- factor(ntp)
+})
+
+
+model <- aov(TUBT_change ~ ntp + Error(id), data = bas_vs_im)
+
+summary(model)
+
+```
+
+```{r}
+### b)
+
+id<- as.vector(replicate(3, 1:14))
+bas_vs_im<- data.frame(id)
+bas_vs_im$TUBT_change <- c(tear.df$pt3_5, tear.df$pt6_5, tear.df$pt10_5)
+bas_vs_im$ntp <- rep(c(3,6,10), each = 14)
+
+
+bas_vs_im <- within(bas_vs_im, {
+                   id <- factor(id)
+                   ntp <- factor(ntp)
+})
+
+
+model <- aov(TUBT_change ~ ntp + Error(id), data = bas_vs_im)
+
+summary(model)
+
+```
+
+```{r}
+### c)
+
+id<- as.vector(replicate(3, 1:14))
+bas_vs_im<- data.frame(id)
+bas_vs_im$TUBT_change <- c(tear.df$pt3_10, tear.df$pt6_10, tear.df$pt10_10)
+bas_vs_im$ntp <- rep(c(3,6,10), each = 14)
+
+
+bas_vs_im <- within(bas_vs_im, {
+                   id <- factor(id)
+                   ntp <- factor(ntp)
+})
+
+
+model <- aov(TUBT_change ~ ntp + Error(id), data = bas_vs_im)
+
+summary(model)
+
+```
+
+
+```{r}
+### d)
+
+
+id<- as.vector(replicate(3, 1:14))
+bas_vs_im<- data.frame(id)
+bas_vs_im$TUBT_change <- c(tear.df$pt3_15, tear.df$pt6_15, tear.df$pt10_15)
+bas_vs_im$ntp <- rep(c(3,6,10), each = 14)
+
+
+bas_vs_im <- within(bas_vs_im, {
+                   id <- factor(id)
+                   ntp <- factor(ntp)
+})
+
+
+model <- aov(TUBT_change ~ ntp + Error(id), data = bas_vs_im)
+
+summary(model)
+
+```
+
+```{r}
+### e)
+
+cat('based on p-values, changes in tbut is not related with nonblink time period')
+
+```
+
