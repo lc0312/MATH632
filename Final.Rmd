@@ -1,8 +1,8 @@
 ---
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
+  html_document: default
+  word_document: default
 ---
 Final
 Q1
@@ -130,7 +130,7 @@ chisq.test(data_fm$pos_age_adjust,data_fm$pre_age_adjust)
 
 p_pre <- ((Premenopausal_person_years+Postmenopausal_person_years)*(Premenopausal_cases/Premenopausal_person_years))/sum(Premenopausal_person_years+Postmenopausal_person_years)
 
-p_pps <- ((Premenopausal_person_years+Postmenopausal_person_years)*(Postmenopausal_cases/Postmenopausal_person_years))/sum(Premenopausal_person_years+Postmenopausal_person_years)
+p_pos <- ((Premenopausal_person_years+Postmenopausal_person_years)*(Postmenopausal_cases/Postmenopausal_person_years))/sum(Premenopausal_person_years+Postmenopausal_person_years)
 
 cat (' rate ratio is ')
 rr <- sum(p_pre)/sum (p_pos)
