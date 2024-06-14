@@ -1,0 +1,221 @@
+---
+title: "hw3"
+author: "CL"
+date: "2024-04-09"
+output: pdf_document
+---
+```{r}
+library('BSDA')
+```
+
+
+Q1
+```{r}
+### a)
+
+DBP_Mean <- c(8.6, 5.3, 4.9, 1.1)
+DBP_sdc<- c(6.2, 5.4, 7.0, 6.5)
+DBP_n <- c(20,20,20,20)
+
+cat ('p-value table: \n')
+
+for (x in 1:3){
+  cat (x, 'vs \n')
+  for (y in x:3) {
+    
+    t_test=tsum.test(DBP_Mean[x], s.x=DBP_sdc[x], n.x=DBP_n[x], DBP_Mean[y+1], s.y=DBP_sdc[y+1], n.y=DBP_n[y+1])
+    cat (y+1) 
+    cat (':', t_test$p.value, '\n')
+  }
+  
+}
+
+cat ('since p-value is different from 0.03-0.84, so obviously change in DBP is not same among four groups')
+
+```
+
+```{r}
+### b)
+
+cat ('based on group 2 vs group 4, we can say it is a slight different (p<0.05), so that only counseling for weight reduction is not a significant effect')
+
+  
+```
+
+```{r}
+### c)
+
+cat ('based on group 3 and 4 (p-value=0.0832), the meditation instruction has a significant effect')
+
+```
+
+
+```{r}
+### d)
+
+cat ('based on group 1 vs 3 (p-value=0.0849), it shows weight reduction is working on DBP change and it is better for people who get meditational counseling')
+
+```
+
+
+Q2
+```{r}
+### a)
+
+BETACAR_DB <-read.csv('D:/R632/HW3/BETACAR.DAT.csv')
+
+model_bl1<-lm(BETACAR_DB$Base1lvl~BETACAR_DB$Prepar) 
+
+sd (BETACAR_DB$Base1lvl)/mean (BETACAR_DB$Base1lvl)
+
+cat ('CV by defination')
+
+library(rcompanion)
+
+
+cat ('CV by lm model')
+accuracy(list(model_bl1))
+```
+
+```{r}
+### b)
+
+BETACAR_DB1<- BETACAR_DB[BETACAR_DB$Prepar == 1, ]
+BETACAR_DB2<- BETACAR_DB[BETACAR_DB$Prepar == 2, ]
+BETACAR_DB3<- BETACAR_DB[BETACAR_DB$Prepar == 3, ]
+BETACAR_DB4<- BETACAR_DB[BETACAR_DB$Prepar == 4, ]
+
+cat ('SOL')
+t.test (BETACAR_DB1$Wk6lvl, (BETACAR_DB1$Base1lvl+BETACAR_DB1$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('ROCHE')
+t.test (BETACAR_DB2$Wk6lvl, (BETACAR_DB2$Base1lvl+BETACAR_DB2$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('BASF-30')
+t.test (BETACAR_DB3$Wk6lvl, (BETACAR_DB3$Base1lvl+BETACAR_DB3$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('BASF-60')
+t.test (BETACAR_DB4$Wk6lvl, (BETACAR_DB4$Base1lvl+BETACAR_DB4$Base2lvl)/2, paired=TRUE)$p.value
+
+```
+
+
+
+```{r}
+### c)
+
+cat ('SOL')
+t.test (BETACAR_DB1$Wk8lvl, (BETACAR_DB1$Base1lvl+BETACAR_DB1$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('ROCHE')
+t.test (BETACAR_DB2$Wk8lvl, (BETACAR_DB2$Base1lvl+BETACAR_DB2$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('BASF-30')
+t.test (BETACAR_DB3$Wk8lvl, (BETACAR_DB3$Base1lvl+BETACAR_DB3$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('BASF-60')
+t.test (BETACAR_DB4$Wk8lvl, (BETACAR_DB4$Base1lvl+BETACAR_DB4$Base2lvl)/2, paired=TRUE)$p.value
+```
+
+
+
+
+
+```{r}
+### d)
+
+cat ('SOL')
+t.test (BETACAR_DB1$Wk10lvl, (BETACAR_DB1$Base1lvl+BETACAR_DB1$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('ROCHE')
+t.test (BETACAR_DB2$Wk10lvl, (BETACAR_DB2$Base1lvl+BETACAR_DB2$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('BASF-30')
+t.test (BETACAR_DB3$Wk10lvl, (BETACAR_DB3$Base1lvl+BETACAR_DB3$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('BASF-60')
+t.test (BETACAR_DB4$Wk10lvl, (BETACAR_DB4$Base1lvl+BETACAR_DB4$Base2lvl)/2, paired=TRUE)$p.value
+```
+
+
+```{r}
+### e)
+
+cat ('SOL')
+t.test (BETACAR_DB1$Wk12lvl, (BETACAR_DB1$Base1lvl+BETACAR_DB1$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('ROCHE')
+t.test (BETACAR_DB2$Wk12lvl, (BETACAR_DB2$Base1lvl+BETACAR_DB2$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('BASF-30')
+t.test (BETACAR_DB3$Wk12lvl, (BETACAR_DB3$Base1lvl+BETACAR_DB3$Base2lvl)/2, paired=TRUE)$p.value
+
+cat ('BASF-60')
+t.test (BETACAR_DB4$Wk12lvl, (BETACAR_DB4$Base1lvl+BETACAR_DB4$Base2lvl)/2, paired=TRUE)$p.value
+
+```
+
+
+```{r}
+### f)
+
+BETACAR_DB_Mean<-aggregate(.~ Prepar, data = BETACAR_DB, mean)
+BETACAR_DB_Mean$Basemeanlvl<- 0.5*BETACAR_DB_Mean$Base1lvl+0.5*BETACAR_DB_Mean$Base2lvl
+BETACAR_DB_Mean<- subset(BETACAR_DB_Mean, select = -c(Id, Base1lvl,Base2lvl))
+
+t.test (BETACAR_DB_Mean$Wk6lvl, BETACAR_DB_Mean$Basemeanlvl, paired=TRUE)
+t.test (BETACAR_DB_Mean$Wk8lvl, BETACAR_DB_Mean$Basemeanlvl, paired=TRUE)
+t.test (BETACAR_DB_Mean$Wk10lvl, BETACAR_DB_Mean$Basemeanlvl, paired=TRUE)
+t.test (BETACAR_DB_Mean$Wk12lvl, BETACAR_DB_Mean$Basemeanlvl, paired=TRUE)
+```
+
+
+```{r}
+### g)
+
+pclvl <- BETACAR_DB_Mean$Basemeanlvl
+pclvl <- append(pclvl, BETACAR_DB_Mean$Wk6lvl)
+pclvl <- append(pclvl, BETACAR_DB_Mean$Wk8lvl)
+pclvl <- append(pclvl, BETACAR_DB_Mean$Wk10lvl)
+pclvl <- append(pclvl, BETACAR_DB_Mean$Wk12lvl)
+
+
+BETACAR_DB_TF<- data.frame(pclvl)
+
+Prepar <- c(1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4)
+BETACAR_DB_TF<- cbind(BETACAR_DB_TF, Prepar=Prepar)
+
+wk<- c(0,0,0,0,6,6,6,6,8,8,8,8,0,10,10,10,12,12,12,12)
+BETACAR_DB_TF<- cbind(BETACAR_DB_TF, wk=wk)
+
+BETACAR_DB_TF$wk<- as.factor(BETACAR_DB_TF$wk)
+BETACAR_DB_TF$Prepar<- as.factor(BETACAR_DB_TF$Prepar)
+
+model <- aov(pclvl~Prepar+wk, data = BETACAR_DB_TF)
+summary(model)
+TukeyHSD(model)
+
+```
+
+
+
+Q3
+```{r}
+library(vcd)
+library(oddsratio)
+
+table <- matrix(c(611, 68,308,37), nrow=2)
+
+assocstats(table)
+cat ('From Phi-Coefficient=0.011, we can say there is no or negligible relationship between sex and Victimization \n')
+
+cat ('\n')
+
+oddsratio(table)
+
+cat ('odds ratio = 0.07640738, this small number also means when compare with a man, a female has low risk to get Victimization.In other words, female will not have a higher chance to get Victimization due toher sex')
+
+```
+
+
+
