@@ -1,0 +1,179 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+### Q1
+```{r} 
+#(a)
+
+Reticulocytes <- c(3.6, 2.0, 0.3, 0.3, 0.2, 3.0, 0.0, 1.0, 2.2)
+Lymphocytes <- c(1700, 3078, 1820, 2706, 2086, 2299, 6761, 2088, 2013)
+
+Reg_model <- lm(Lymphocytes ~ Reticulocytes)
+
+plot(Reticulocytes,Lymphocytes, col='red')
+
+abline(Reg_model, col='black')
+
+```
+
+
+```{r}
+#(b)
+
+F_test<-var.test(Reticulocytes, Lymphocytes)
+
+print (F_test)
+
+```
+```{r}
+#(c)
+
+summary (Reg_model)
+# it's 0.1677
+```
+```{r}
+#(d)
+
+# this small number means its not a good fit, while I think the data does not have a clear relationship.
+
+```
+
+```{r}
+#(e)
+
+cat ("the t-test score if 4.457>2, then we can say it's significant at the 95% level")
+
+```
+```{r}
+#(f)
+
+cat ("404.5 and 762.9")
+```
+
+
+### Q2
+```{r}
+#(a)
+
+library("readxl")
+data_table<-read_excel('D:/R632/HW1/BONEDEN1.xls')
+
+pyr <-matrix(cbind (data_table$pyr1, data_table$pyr2), nrow=82, ncol=1)
+ls <- matrix(rbind (data_table$ls1, data_table$ls2), nrow=82, ncol=1)
+
+pyr_ls_model <- lm(ls ~ pyr)
+summary(pyr_ls_model)
+
+plot(pyr,ls, col = rep(1:2, each = 41))
+abline(lm(ls ~ pyr), col='blue')
+
+```
+```{r}
+#(b)
+
+fn <- matrix(rbind (data_table$fn1, data_table$fn2), nrow=82, ncol=1)
+
+pyr_fn_model <- lm(fn ~ pyr)
+summary(pyr_fn_model)
+
+plot(pyr,fn, col = rep(1:2, each = 41))
+abline(lm(fn ~ pyr), col='blue')
+```
+```{r}
+#(c)
+
+fs <- matrix(rbind (data_table$fs1, data_table$fs2), nrow=82, ncol=1)
+
+pyr_fs_model <- lm(fs ~ pyr)
+summary(pyr_fs_model)
+
+plot(pyr,fs, col = rep(1:2, each = 41))
+abline(lm(fs ~ pyr), col='blue')
+
+```
+```{r}
+#(d)
+
+wt1<-data_table$wt1
+wt2<-data_table$wt2
+
+t.test(wt1, wt2, paired=F)
+```
+```{r}
+#(e)
+
+wt<- matrix(rbind (data_table$wt1, data_table$wt2), nrow=82, ncol=1)
+
+ls_pyr.wt_model <- lm(ls ~ pyr + wt)
+
+summary(ls_pyr.wt_model)
+
+```
+
+```{r}
+#(f)
+fn_pyr.wt_model <- lm(fn ~ pyr + wt)
+
+summary(fn_pyr.wt_model)
+```
+```{r}
+#(g)
+
+fs_pyr.wt_model <- lm(fs ~ pyr + wt)
+
+summary(fs_pyr.wt_model)
+```
+
+### Q3
+```{r}
+#(a)
+
+tfb<- (c(0,8,18,48,64,66,79,92))/12
+ls<- c(0.797,0.806,0.817,0.825,0.837,0.841,0.886,0.881)
+fn<- c(0.643,0.638,0.648,0.674,0.640,0.676,0.651,0.680)
+
+tfb_ls_model <- lm(ls~tfb)
+summary(tfb_ls_model)
+
+cat(" rate per year is", 0.0105624,"\n","standard error is ", 0.001742)
+
+```
+```{r}
+#(b)
+
+cat ("for lumbar spine","\n")
+t.test(ls[1:4], ls[5:8], paired=T)
+
+cat ("for femoral neck","\n")
+t.test(fn[1:4], fn[5:8], paired=T)
+```
+```{r}
+#(c)
+
+(0.0105624-0.15/40)/(0.15/40)
+
+cat("since change rate is 1.8 time as usual, I will say whis woman is differ significantly")
+
+```
+```{r}
+#(d)
+
+cov(ls,fn) 
+cat("such a small number means the directional relationship between bone density of the lumbar spine and bone
+density of the femoral neck is not clear ")
+
+cor.test(ls,fn, alternative="two.sided")
+```
+```{r}
+#(e)
+
+cat ("95% CI is -0.34-0.89")
+```
+```{r}
+#(f)
+
+cat("p-value is 0.2291, so there is weak relationship between lumbar spine and bone density of the femoral neck")
+```
+
