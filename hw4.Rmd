@@ -1,0 +1,304 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+Q1
+
+```{r}
+###Q1
+###a)
+
+cat ('we can use 2x5 contingency table to analyze it')
+
+```
+
+
+```{r}
+### b)
+
+HORMONE_DB <-read.csv('D:/R632/HW4/HORMONE-2.csv')
+
+HORMONE_H1 <- HORMONE_DB[HORMONE_DB$Hormone=='1',]
+HORMONE_H2 <- HORMONE_DB[HORMONE_DB$Hormone=='2',]
+HORMONE_H3 <- HORMONE_DB[HORMONE_DB$Hormone=='3',]
+HORMONE_H4 <- HORMONE_DB[HORMONE_DB$Hormone=='4',]
+HORMONE_H5 <- HORMONE_DB[HORMONE_DB$Hormone=='5',]
+
+summary (HORMONE_H1$Pansecpt>HORMONE_H1$Pansecpr)
+summary (HORMONE_H2$Pansecpt>HORMONE_H2$Pansecpr)
+summary (HORMONE_H3$Pansecpt>HORMONE_H3$Pansecpr)
+summary (HORMONE_H4$Pansecpt>HORMONE_H4$Pansecpr)
+summary (HORMONE_H5$Pansecpt>HORMONE_H5$Pansecpr)
+
+test_table<- matrix(c(25,32,137,31,96,5,3,28,7,34),nrow = 2,byrow = TRUE)
+chisq.test(test_table)
+cat ('p-value is 0.1246, which mean pancreatic changes are different for each HORMONE')
+
+```
+```{r}
+### c)
+
+summary (HORMONE_H1$Bilsecpt>HORMONE_H1$Bilsecpr)
+summary (HORMONE_H2$Bilsecpt>HORMONE_H2$Bilsecpr)
+summary (HORMONE_H3$Bilsecpt>HORMONE_H3$Bilsecpr)
+summary (HORMONE_H4$Bilsecpt>HORMONE_H4$Bilsecpr)
+summary (HORMONE_H5$Bilsecpt>HORMONE_H5$Bilsecpr)
+
+test_table<- matrix(c(20,30,84,29,62,10,5,81,9,68),nrow = 2,byrow = TRUE)
+chisq.test(test_table)
+cat ('p-value is 3.649e-05, which mean biliary changes are same for each HORMONE')
+
+```
+
+```{r}
+### d)
+
+cat ('for hormone 2')
+
+low_dose <- HORMONE_H2[HORMONE_H2$Dose==7.5,]$Pansecpt-HORMONE_H2[HORMONE_H2$Dose==7.5,]$Pansecpr
+high_dose <- HORMONE_H2[HORMONE_H2$Dose==15,]$Pansecpt-HORMONE_H2[HORMONE_H2$Dose==15,]$Pansecpr
+
+t.test (low_dose, high_dose)
+
+
+cat ('for hormone 3')
+lm ((Pansecpt-Pansecpr)~Dose, data=HORMONE_H3)
+
+cat ('for hormone 4')
+lm ((Pansecpt-Pansecpr)~Dose, data=HORMONE_H4)
+
+cat ('for hormone 5')
+lm ((Pansecpt-Pansecpr)~Dose, data=HORMONE_H5)
+
+```
+
+```{r}
+### e)
+
+cat ('for hormone 2')
+
+low_dose <- HORMONE_H2[HORMONE_H2$Dose==7.5,]$Bilsecpt-HORMONE_H2[HORMONE_H2$Dose==7.5,]$Bilsecpr
+high_dose <- HORMONE_H2[HORMONE_H2$Dose==15,]$Bilsecpt-HORMONE_H2[HORMONE_H2$Dose==15,]$Bilsecpr
+
+t.test (low_dose, high_dose)
+
+
+cat ('for hormone 3')
+lm ((Bilsecpt-Bilsecpr)~Dose, data=HORMONE_H3)
+
+cat ('for hormone 4')
+lm ((Bilsecpt-Bilsecpr)~Dose, data=HORMONE_H4)
+
+cat ('for hormone 5')
+lm ((Bilsecpt-Bilsecpr)~Dose, data=HORMONE_H5)
+```
+
+
+
+Q2
+```{r}
+###a)
+
+cat ('A two sample test can be used: 2x2 contingency table, better vs worse, Placebo vs Sorbinil')
+
+```
+
+
+
+```{r}
+###b)
+
+test_table<- matrix(c(5+17+84,59+37+18+9+14, 4+21+97, 50+22+16+14+14),nrow = 2,byrow = TRUE)
+fisher.test(test_table)
+
+```
+
+```{r}
+###c)
+
+cat ('Chi-Square Test  Test for those multi categorie date can be used')
+
+```
+
+```{r}
+###d)
+
+test_table<- matrix(c(5,17,84,59,37,18,9,14, 4,21,97,50,22,16,14,14),nrow = 2,byrow = TRUE)
+
+chisq.test(test_table)
+
+cat('maybe Cochran–Mantel–Haenszel test???')
+
+```
+```{r}
+###e)
+
+Placebo <- c()
+Placebo[1:5] <- 2
+Placebo[6:22] <- 1
+Placebo[23:106] <- 0
+Placebo[107:165]<- -1
+Placebo[166:203]<- -2
+Placebo[204:221]<- -3
+Placebo[222:230]<- -4
+Placebo[231:244]<- -5
+
+Sorbinil <- c()
+Sorbinil[1:4] <- 2 
+Sorbinil[5:25] <- 1
+Sorbinil[26:122] <- 0
+Sorbinil[123:172] <- -1
+Sorbinil[173:194] <- -2
+Sorbinil[195:210] <- -3
+Sorbinil[211:224] <- -4
+Sorbinil[225:239] <- -5
+
+wilcox.test (Placebo, Sorbinil, conf.int = TRUE, paired=FALSE)
+
+```
+```{r}
+###f)
+
+cat ('since i received warninng on chisq and wilcox test, I should believe on Wilcoxon rank sum test. Also Wilcoxon rank sum test counted for different classification which is better than t-test and Chi-squared test')
+
+
+```
+
+
+
+Q3
+```{r}
+###a)
+
+BONEDEN_DB <-read.csv('D:/R632/HW4/BONEDEN.csv')
+
+t.test (BONEDEN_DB$fn1, BONEDEN_DB$fn2, paired = FALSE)
+cat('t- test result shows there are no difference')
+
+
+cat('we can use Wilcoxon rank-sum test for nonparametric methods')
+wilcox.test (BONEDEN_DB$fn1, BONEDEN_DB$fn2, conf.int = TRUE, paired=FALSE)
+
+cat ('result from Wilcoxon rank-sum test shows a stronger suggestion that two groups are same')
+```
+
+```{r}
+###b)
+
+t.test (BONEDEN_DB$fs1, BONEDEN_DB$fs2, paired = FALSE)
+cat('t- test result shows there are no difference')
+
+
+cat('we can use Wilcoxon rank-sum test for nonparametric methods')
+wilcox.test (BONEDEN_DB$fs1, BONEDEN_DB$fs2,conf.int = TRUE,paired=FALSE)
+
+cat ('once agian, all test suggest there is no difference, but Wilcoxon rank-sum give a stronger sign')
+```
+Q4
+```{r}
+###a)
+
+cat('Wilcoxon rank-sum test can be used')
+
+```
+
+
+```{r}
+###b)
+
+cat ('larger version should be Mann-Whitney U test')
+
+Caucasian <- c()
+Caucasian[1:12] <- 100
+Caucasian[13:29] <- 300
+Caucasian[30:44] <- 500
+Caucasian[45:53] <- 700
+
+African_American <- c()
+African_American[1:28] <- 100
+African_American[29:38] <- 300
+African_American[39:43] <- 500
+African_American[44:46] <- 700
+
+wilcox.test(Caucasian, African_American, paired=FALSE)
+
+```
+
+```{r}
+###c)
+
+cat ('here I used a fucntion to do the exact permutation test for the Mann-Whitney U test in R  ')
+library(exactRankTests)
+
+wilcox.exact(Caucasian, African_American)
+
+cat ('I tried to use permutation test for this data set as follow. code are from Chatgpt')
+
+```
+```{r}
+###c)
+observed_stat <- wilcox.test(Caucasian, African_American)$statistic
+
+combined_data <- c(Caucasian, African_American)
+
+num_permutations <- 10000
+
+permuted_stats <- numeric(num_permutations)
+
+for (i in 1:num_permutations) {
+
+  shuffled_data <- sample(combined_data)
+  
+  permuted_stats[i] <- wilcox.test(shuffled_data[1:length(Caucasian)], shuffled_data[(length(African_American)+1):length(combined_data)])$statistic
+}
+
+p_value <- sum(permuted_stats >= observed_stat) / num_permutations
+
+print(p_value)
+```
+```{r}
+###d)
+
+cat ('b and c results are pretty same')
+
+```
+
+
+
+```{r}
+###e)
+
+cat ('all of them shows a same conclusion: two grousp are not same')
+```
+
+Q5
+```{r}
+###a)
+
+cat ('we can use a Kruskal-Wallis Tes, which is a tnon-parametric analysis for multi groups')
+
+```
+
+
+```{r}
+###b)
+
+group1 <- c(1.7,2.0,2.0,2.2,4.0,4.0,5.0,6.7,7.8)
+group2 <- c(1.4,2.4,2.4,3.3,4.4,4.7,6.7,7.6,9.5,11.7)
+group3 <- c(2.9,3.8,4.4,4.7,5.0,5.6,7.4,9.4,10.3)
+
+kruskal.test(list(group1, group2, group3))
+
+
+cat('two wat anova')
+
+anova_result <- aov(c(group1, group2, group3) ~ as.factor(rep(1:3, c(length(group1), length(group2), length(group3)))))
+
+TukeyHSD(anova_result)
+
+cat ('the result is not as clear as two way anova method, because there is no compare between groups')
+
+```
+
+
